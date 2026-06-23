@@ -11,7 +11,7 @@ on:
       - 'credit-based/**'
       - 'shared/**'
       - 'Dockerfile'
-      - 'docker-compose.yml'
+      - 'docker compose.yml'
       - '.github/workflows/deploy-templates.yml'
   workflow_dispatch:
 
@@ -48,23 +48,23 @@ jobs:
             cd /var/www/demos
 
             # Build all images
-            docker-compose build --no-cache
+            docker compose build --no-cache
 
             # Stop and remove old containers
-            docker-compose down
+            docker compose down
 
             # Start containers
-            docker-compose up -d
+            docker compose up -d
 
             # Wait for containers to be healthy
             echo "Waiting for containers to start..."
             sleep 10
 
             # Check container status
-            docker-compose ps
+            docker compose ps
 
             # Show logs
-            docker-compose logs --tail=20
+            docker compose logs --tail=20
           EOF
 
       - name: Health check endpoints
