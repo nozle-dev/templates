@@ -1,0 +1,91 @@
+name: Deploy Templates to Demo Server
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'flat-subscription/**'
+      - 'saas-usage/**'
+      - 'compute/**'
+      - 'credit-based/**'
+      - 'shared/**'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - '.github/workflows/deploy-templates.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Sync code to server
+        run: |
+          rsync -avz --delete \
+            --exclude='node_modules' \
+            --exclude='.next' \
+            --exclude='out' \
+            --exclude='.git' \
+            --exclude='.turbo' \
+            -e "ssh -i ~/.ssh/id_ed25519" \
+            ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/demos/
+
+      - name: Build and restart Docker containers
+        run: |
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+            cd /var/www/demos
+
+            # Build all images
+            docker-compose build --no-cache
+
+            # Stop and remove old containers
+            docker-compose down
+
+            # Start containers
+            docker-compose up -d
+
+            # Wait for containers to be healthy
+            echo "Waiting for containers to start..."
+            sleep 10
+
+            # Check container status
+            docker-compose ps
+
+            # Show logs
+            docker-compose logs --tail=20
+          EOF
+
+      - name: Health check endpoints
+        run: |
+          echo "Checking template endpoints..."
+          sleep 15
+
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+            # Test each endpoint
+            for template in flat-subscription saas-usage compute credit-based; do
+              port=$((3000 + $(echo "flat-subscription saas-usage compute credit-based" | tr ' ' '\n' | grep -n "^$template$" | cut -d: -f1) - 1))
+              echo "Testing $template on port $port..."
+              curl -f http://localhost:$port/$template || echo "Warning: $template health check failed"
+            done
+          EOF
+
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployment completed!"
+          echo "Templates deployed to:"
+          echo "  - https://template.nozle.dev/flat-subscription"
+          echo "  - https://template.nozle.dev/saas-usage"
+          echo "  - https://template.nozle.dev/compute"
+          echo "  - https://template.nozle.dev/credit-based"

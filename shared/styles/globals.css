@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary (Nozle Violet - #6366f1) */
+    --primary: 239 84% 67%;
+    --primary-hover: 243 75% 59%;
+    --primary-active: 243 75% 51%;
+    --primary-soft: 239 84% 97%;
+    --primary-muted: 239 84% 80%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Semantic States */
+    --success: 158 64% 52%;
+    --success-soft: 152 76% 91%;
+    --warning: 38 92% 50%;
+    --warning-soft: 48 96% 89%;
+    --error: 0 84% 60%;
+    --error-soft: 0 86% 94%;
+
+    /* Text */
+    --ink: 0 0% 10%;
+    --body: 0 0% 25%;
+    --muted: 220 9% 46%;
+    --muted-soft: 218 11% 65%;
+    --foreground: 0 0% 10%;
+
+    /* Surfaces */
+    --canvas: 0 0% 100%;
+    --background: 0 0% 100%;
+    --surface: 0 0% 100%;
+    --surface-soft: 220 14% 98%;
+    --surface-strong: 220 13% 96%;
+
+    /* Cards */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    /* Borders */
+    --border: 214 32% 91%;
+    --border-soft: 220 13% 96%;
+    --border-strong: 218 21% 82%;
+    --input: 214 32% 91%;
+    --ring: 239 84% 67%;
+  }
+
+  /* Dark mode intentionally excluded - B2B SaaS users expect light UI */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Typography defaults */
+  h1 {
+    @apply text-display-lg font-semibold text-ink;
+  }
+
+  h2 {
+    @apply text-display-md font-semibold text-ink;
+  }
+
+  h3 {
+    @apply text-display-sm font-semibold text-ink;
+  }
+
+  h4 {
+    @apply text-title-lg font-semibold text-ink;
+  }
+
+  p {
+    @apply text-body-md text-body;
+  }
+
+  code {
+    @apply font-mono text-sm bg-surface-strong px-1.5 py-0.5 rounded-sm;
+  }
+
+  pre {
+    @apply font-mono text-sm bg-surface-strong p-4 rounded-md overflow-x-auto border border-border;
+  }
+
+  /* Focus states */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer components {
+  /* Button variants */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:bg-primary-active disabled:pointer-events-none disabled:bg-primary-muted disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md border border-border bg-canvas px-4 py-2.5 text-sm font-medium text-ink shadow-sm transition-colors hover:bg-surface-soft hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-surface-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-destructive {
+    @apply inline-flex items-center justify-center rounded-md bg-error px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-error/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 active:bg-error/80 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  /* Card variants */
+  .card {
+    @apply rounded-lg bg-card border border-border shadow-md p-6;
+  }
+
+  .card-flat {
+    @apply rounded-lg bg-card border border-border p-6;
+  }
+
+  /* Badge variants */
+  .badge {
+    @apply inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-wide;
+  }
+
+  .badge-primary {
+    @apply bg-primary-soft text-primary;
+  }
+
+  .badge-success {
+    @apply bg-success-soft text-success;
+  }
+
+  .badge-warning {
+    @apply bg-warning-soft text-warning;
+  }
+
+  .badge-error {
+    @apply bg-error-soft text-error;
+  }
+
+  /* Input */
+  .input {
+    @apply flex h-10 w-full rounded-md border border-input bg-canvas px-3 py-2 text-sm text-ink ring-offset-background placeholder:text-muted-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* Code/API key display */
+  .code-block {
+    @apply rounded-md bg-surface-strong p-4 font-mono text-sm text-ink border border-border overflow-x-auto;
+  }
+
+  .api-key-display {
+    @apply rounded-md bg-surface-soft px-4 py-3 font-mono text-sm text-ink border border-border flex items-center justify-between;
+  }
+}

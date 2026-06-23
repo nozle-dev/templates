@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  flat-subscription:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TEMPLATE_NAME: flat-subscription
+        BASE_PATH: /flat-subscription
+        PORT: 3000
+    container_name: nozle-demo-flat
+    ports:
+      - "3000:3000"
+    environment:
+      - DEMO_MODE=true
+      - BASE_PATH=/flat-subscription
+      - PORT=3000
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/flat-subscription"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  saas-usage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TEMPLATE_NAME: saas-usage
+        BASE_PATH: /saas-usage
+        PORT: 3001
+    container_name: nozle-demo-saas
+    ports:
+      - "3001:3001"
+    environment:
+      - DEMO_MODE=true
+      - BASE_PATH=/saas-usage
+      - PORT=3001
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/saas-usage"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  compute:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TEMPLATE_NAME: compute
+        BASE_PATH: /compute
+        PORT: 3003
+    container_name: nozle-demo-compute
+    ports:
+      - "3003:3003"
+    environment:
+      - DEMO_MODE=true
+      - BASE_PATH=/compute
+      - PORT=3003
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3003/compute"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  credit-based:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TEMPLATE_NAME: credit-based
+        BASE_PATH: /credit-based
+        PORT: 3004
+    container_name: nozle-demo-credits
+    ports:
+      - "3004:3004"
+    environment:
+      - DEMO_MODE=true
+      - BASE_PATH=/credit-based
+      - PORT=3004
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3004/credit-based"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

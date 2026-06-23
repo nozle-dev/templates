@@ -1,0 +1,48 @@
+{
+  "name": "nozle-template-compute",
+  "version": "1.0.0",
+  "description": "Flat subscription template for workspace-based SaaS products (Notion, Linear, Slack)",
+  "author": "Nozle",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^16.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "@nozle-js/react": "^0.5.3",
+    "@nozle-js/node": "^0.3.0",
+    "@stripe/stripe-js": "^5.7.0",
+    "@stripe/react-stripe-js": "^3.2.0",
+    "iron-session": "^8.0.3",
+    "bcrypt": "^5.1.1",
+    "pg": "^8.13.1",
+    "recharts": "^2.12.7",
+    "lucide-react": "^0.468.0",
+    "date-fns": "^4.1.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
+    "class-variance-authority": "^0.7.1",
+    "next-themes": "^0.4.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/bcrypt": "^5.0.2",
+    "@types/pg": "^8.11.10",
+    "@tailwindcss/postcss": "^4",
+    "postcss": "^8",
+    "tailwindcss": "^4.1.18",
+    "tailwindcss-animate": "^1.0.7",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.4"
+  }
+}
