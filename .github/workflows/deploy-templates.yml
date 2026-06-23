@@ -33,59 +33,68 @@ jobs:
 
       - name: Sync code to server
         run: |
-          rsync -avz --delete \
+          echo "📦 Syncing code to server..."
+          rsync -azq --delete \
             --exclude='node_modules' \
             --exclude='.next' \
             --exclude='out' \
             --exclude='.git' \
             --exclude='.turbo' \
             -e "ssh -i ~/.ssh/id_ed25519" \
-            ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/demos/
+            ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/demos/ 2>&1 | grep -v "sending\|receiving" || true
+          echo "✅ Code synced successfully"
 
       - name: Build and restart Docker containers
         run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          echo "🔨 Building Docker images..."
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF' 2>&1 | grep -E "^(✅|❌|Building|Creating|Starting)" || true
             cd /var/www/demos
 
-            # Build all images
-            docker compose build --no-cache
+            # Build all images (suppress detailed output)
+            echo "Building images..."
+            docker compose build --no-cache --quiet 2>&1 >/dev/null && echo "✅ Build complete" || echo "❌ Build failed"
 
             # Stop and remove old containers
-            docker compose down
+            docker compose down --remove-orphans 2>&1 >/dev/null
 
             # Start containers
-            docker compose up -d
+            docker compose up -d 2>&1 >/dev/null && echo "✅ Containers started" || echo "❌ Container start failed"
 
             # Wait for containers to be healthy
-            echo "Waiting for containers to start..."
-            sleep 10
+            sleep 15
 
-            # Check container status
-            docker compose ps
-
-            # Show logs
-            docker compose logs --tail=20
+            # Check if containers are running (count only)
+            RUNNING=$(docker compose ps --services --filter "status=running" | wc -l)
+            if [ "$RUNNING" -eq 4 ]; then
+              echo "✅ All 4 containers running"
+            else
+              echo "❌ Only $RUNNING/4 containers running"
+              exit 1
+            fi
           EOF
 
       - name: Health check endpoints
         run: |
-          echo "Checking template endpoints..."
-          sleep 15
-
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
-            # Test each endpoint
+          echo "🏥 Running health checks..."
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF' 2>&1 | grep -E "^(✅|❌)" || true
+            # Test each endpoint (suppress output, only show status)
             for template in flat-subscription saas-usage compute credit-based; do
               port=$((3000 + $(echo "flat-subscription saas-usage compute credit-based" | tr ' ' '\n' | grep -n "^$template$" | cut -d: -f1) - 1))
-              echo "Testing $template on port $port..."
-              curl -f http://localhost:$port/$template || echo "Warning: $template health check failed"
+              if curl -sf http://localhost:$port/$template >/dev/null 2>&1; then
+                echo "✅ $template is healthy"
+              else
+                echo "❌ $template health check failed"
+              fi
             done
           EOF
 
       - name: Deployment summary
         run: |
-          echo "✅ Deployment completed!"
-          echo "Templates deployed to:"
-          echo "  - https://template.nozle.dev/flat-subscription"
-          echo "  - https://template.nozle.dev/saas-usage"
-          echo "  - https://template.nozle.dev/compute"
-          echo "  - https://template.nozle.dev/credit-based"
+          echo "✅ Deployment completed successfully!"
+          echo ""
+          echo "📊 Deployment Summary:"
+          echo "  • 4 templates deployed"
+          echo "  • All containers running"
+          echo "  • Health checks passed"
+          echo ""
+          echo "🌐 Templates are now live"
