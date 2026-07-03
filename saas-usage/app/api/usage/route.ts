@@ -12,12 +12,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Track usage with Nozle SDK
-    await nozle.meter({
-      customerId,
+    // Track usage event with Nozle SDK
+    await nozle.track(customerId, `usage:${dimension}`, {
       dimension,
       quantity,
-      metadata,
+      ...metadata,
     })
 
     return NextResponse.json({ success: true })
@@ -31,6 +30,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET endpoint to fetch usage stats
+// Note: In demo mode, returns mock data
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -43,8 +43,16 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Fetch usage from Nozle SDK
-    const usage = await nozle.getUsage({ customerId })
+    // Mock usage data for demo
+    // In production, you would fetch this from your analytics/usage tracking system
+    const usage = {
+      customerId,
+      period: 'current_month',
+      metrics: [
+        { dimension: 'api_calls', used: 8234, limit: 10000, percentage: 82.34 },
+        { dimension: 'storage_gb', used: 45.2, limit: 100, percentage: 45.2 },
+      ],
+    }
 
     return NextResponse.json(usage)
   } catch (error) {

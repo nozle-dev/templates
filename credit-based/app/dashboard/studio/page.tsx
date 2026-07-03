@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { useCredits } from '@nozle-js/react'
+import { useAuth } from '@/lib/auth-context'
 import { Zap, Image, FileText, Video, Music, Code, Palette, Loader2 } from 'lucide-react'
 
 export default function StudioPage() {
-  const { credits, loading: creditsLoading } = useCredits()
+  const { user } = useAuth()
+  const { balance: credits, loading: creditsLoading } = useCredits(user?.id || 'demo_customer')
   const [executing, setExecuting] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
