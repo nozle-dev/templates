@@ -1,12 +1,15 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Home, Key, FileText, BarChart3, Users, Settings, CreditCard } from 'lucide-react'
+import { Home, Key, Activity, ScrollText, Users, BarChart3, Settings, CreditCard } from 'lucide-react'
 import { UserMenu } from '@/components/user-menu'
 import { DemoNotice } from '@/components/demo-notice'
 import { GithubLink } from '@/components/github-link'
 import { ThemeToggle } from '@/components/theme-toggle'
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 
 export default function DashboardLayout({
   children,
@@ -18,25 +21,26 @@ export default function DashboardLayout({
   const navigation = [
     { name: 'Home', href: '/dashboard', icon: Home },
     { name: 'API Keys', href: '/dashboard/api-keys', icon: Key },
-    { name: 'Usage', href: '/dashboard/usage', icon: BarChart3 },
-    { name: 'Logs', href: '/dashboard/logs', icon: FileText },
+    { name: 'Usage', href: '/dashboard/usage', icon: Activity },
+    { name: 'Logs', href: '/dashboard/logs', icon: ScrollText },
     { name: 'Team', href: '/dashboard/team', icon: Users },
+    { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
     { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
   ]
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
-      {/* Demo Notice Banner */}
-      <DemoNotice />
+      {/* Demo Notice Banner - Hidden for cleaner demo experience */}
+      {/* <DemoNotice /> */}
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar - Fixed, no scroll */}
         <aside className="flex w-64 flex-col border-r bg-card">
           {/* Sidebar Header */}
           <div className="flex h-16 items-center border-b px-6">
-            <Link href="/" className="text-lg font-bold hover:text-primary transition-colors">
-              API Platform
+            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+              <Image src={`${basePath}/nozle-logo.svg`} alt="Nozle" width={100} height={35} className="h-7 w-auto" unoptimized />
             </Link>
           </div>
 

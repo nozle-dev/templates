@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
+import { apiClient } from './api-client'
 
 export interface User {
   id: string
@@ -30,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Fetch current user on mount
   const fetchUser = async () => {
     try {
-      const res = await fetch('/api/auth/me')
+      const res = await apiClient('/api/auth/me')
 
       if (res.ok) {
         const data = await res.json()
@@ -64,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null)
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await apiClient('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -95,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null)
 
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
+      await apiClient('/api/auth/logout', { method: 'POST' })
       setUser(null)
       router.push('/login')
     } catch (err) {

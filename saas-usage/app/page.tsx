@@ -1,5 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Check } from 'lucide-react'
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || process.env.BASE_PATH || ''
 
 export default function Home() {
   return (
@@ -7,7 +9,9 @@ export default function Home() {
       {/* Navigation */}
       <header className="border-b">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="text-xl font-bold">Workspace</div>
+          <Link href="/" className="flex items-center">
+            <Image src={`${basePath}/nozle-logo.svg`} unoptimized alt="Nozle" width={120} height={42} className="h-8 w-auto" />
+          </Link>
           <nav className="flex items-center gap-6">
             <Link href="/pricing" className="text-sm hover:underline">
               Pricing

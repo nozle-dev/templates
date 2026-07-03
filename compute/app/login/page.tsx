@@ -4,14 +4,16 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth-context'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react'
 import { GithubLink } from '@/components/github-link'
+import { apiClient } from '@/lib/api-client'
 
 export default function LoginPage() {
   const { user, login, loading: authLoading } = useAuth()
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -19,11 +21,9 @@ export default function LoginPage() {
 
   // Clear demo sessions on mount (ensures fresh login on app restart)
   useEffect(() => {
-    if (isDemoMode) {
-      fetch('/api/auth/clear-demo-session', { method: 'POST' })
-        .catch(() => {}) // Ignore errors
-    }
-  }, [isDemoMode])
+    apiClient('/api/auth/clear-demo-session', { method: 'POST' })
+      .catch(() => {}) // Ignore errors
+  }, [])
 
   // Redirect if already logged in
   useEffect(() => {
@@ -32,13 +32,11 @@ export default function LoginPage() {
     }
   }, [user, authLoading, router])
 
-  // Pre-fill demo credentials in demo mode
+  // Always pre-fill demo credentials for easy access
   useEffect(() => {
-    if (isDemoMode) {
-      setEmail('demo@nozle.app')
-      setPassword('user@123')
-    }
-  }, [isDemoMode])
+    setEmail('demo@nozle.app')
+    setPassword('Nozlepass@123')
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -79,25 +77,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Demo Mode Banner */}
-        {isDemoMode && (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              <div className="flex-1 text-sm">
-                <p className="font-medium text-blue-900 dark:text-blue-100">
-                  Demo Mode Enabled
-                </p>
-                <p className="mt-1 text-blue-700 dark:text-blue-300">
-                  Try the app without setting up a database. Changes won't be saved.
-                </p>
-                <p className="mt-2 text-xs text-blue-600 dark:text-blue-400">
-                  Credentials are pre-filled below. Just click "Sign in".
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Demo Mode Banner - Hidden */}
 
         {/* Login Form */}
         <div className="rounded-lg border bg-card p-8 shadow-sm">
@@ -131,16 +111,30 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-sm font-medium">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                placeholder="••••••••"
-                disabled={loading}
-              />
+              <div className="relative mt-1">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  placeholder="••••••••"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Submit Button */}
@@ -168,14 +162,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Additional Info */}
-        {isDemoMode && (
-          <div className="text-center text-xs text-muted-foreground">
-            <p>
-              Demo credentials: demo@nozle.app / user@123
-            </p>
-          </div>
-        )}
+        {/* Additional Info - Hidden */}
       </div>
     </div>
   )

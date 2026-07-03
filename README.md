@@ -4,6 +4,14 @@
 
 Learn how to integrate billing into your SaaS by exploring fully-functional demo applications. Each template demonstrates best practices for a specific billing pattern — from simple subscriptions to complex usage-based models.
 
+## 🌐 Live Demos
+
+**Explore the templates live:**
+- [**Flat Subscription**](https://template.nozle.dev/flat-subscription) - Tiered subscription plans
+- [**SaaS Usage**](https://template.nozle.dev/saas-usage) - Base + metered usage  
+- [**Compute**](https://template.nozle.dev/compute) - Graduated pricing tiers
+- [**Credit-Based**](https://template.nozle.dev/credit-based) - Pay-as-you-go credits
+
 ---
 
 ## 🎯 What is This?
@@ -123,8 +131,8 @@ pnpm dev
 Open [http://localhost:3000](http://localhost:3000)
 
 **Demo Login:**
-- Email: `demo@example.com`
-- Password: `demo123`
+- Email: `demo@nozle.app`
+- Password: `Nozlepass@123`
 
 ### Option 2: Install All Templates (Development)
 
@@ -443,3 +451,162 @@ MIT License - feel free to use these templates in your projects.
 **Questions?** Open an issue or check the [Nozle Docs](https://docs.nozle.dev)
 
 **Built with ❤️ for developers building billing into their SaaS**
+
+---
+
+## 🚀 Running Locally
+
+### Prerequisites
+- Node.js 20+ (required by Next.js 16)
+- pnpm 8+
+
+### Quick Start
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/nozle-dev/nozle-templates.git
+cd nozle-templates
+```
+
+2. **Install dependencies**
+```bash
+pnpm install
+```
+
+3. **Choose a template to run**
+
+Each template is a separate Next.js app. Run any of them:
+
+```bash
+# Flat Subscription template
+cd flat-subscription
+pnpm dev
+# Visit http://localhost:3000
+
+# SaaS Usage template
+cd saas-usage
+pnpm dev
+# Visit http://localhost:3000
+
+# Compute template
+cd compute
+pnpm dev
+# Visit http://localhost:3000
+
+# Credit-Based template
+cd credit-based
+pnpm dev
+# Visit http://localhost:3000
+```
+
+### Demo Mode
+
+All templates run in **demo mode** by default:
+- ✅ No API keys required
+- ✅ No database setup needed
+- ✅ Mock data included
+- ✅ Full UI functionality
+
+### Production Mode
+
+To connect to real Nozle APIs:
+
+1. Get your API key from [Nozle Dashboard](https://nozle.ai)
+
+2. Create `.env.local` in the template directory:
+```bash
+NOZLE_API_KEY=sk_live_your_secret_key
+```
+
+3. Restart the dev server
+
+**That's it!** The template will now make real API calls to Nozle.
+
+---
+
+## 🏗️ Project Structure
+
+```
+nozle-templates/
+├── flat-subscription/     # Tiered subscription template
+├── saas-usage/           # Base + metered usage template
+├── compute/              # Graduated pricing template
+├── credit-based/         # Pay-as-you-go credits template
+├── shared/               # Shared components & utilities
+│   ├── components/       # Common UI components
+│   ├── lib/              # SDK utilities & helpers
+│   └── styles/           # Shared styles
+├── Dockerfile            # Multi-template Docker build
+├── docker-compose.yml    # Run all templates together
+└── pnpm-workspace.yaml   # Monorepo configuration
+```
+
+---
+
+## 🐳 Running All Templates with Docker
+
+To run all 4 templates simultaneously:
+
+```bash
+# Build all images
+docker compose build
+
+# Start all containers
+docker compose up -d
+
+# Templates will be available at:
+# - http://localhost:3002/flat-subscription
+# - http://localhost:3001/saas-usage
+# - http://localhost:3003/compute
+# - http://localhost:3004/credit-based
+```
+
+---
+
+## 📚 Documentation
+
+Each template includes:
+- **README.md** - Template-specific documentation
+- **Inline comments** - Detailed code explanations
+- **.env.example** - Configuration template
+
+### SDK Documentation
+
+- [Nozle JS SDK](https://github.com/nozle-dev/nozle-js) - Node.js & React SDK
+- [API Reference](https://docs.nozle.ai/api) - REST API documentation
+- [Integration Guides](https://docs.nozle.ai/guides) - Step-by-step tutorials
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 4
+- **SDK:** @nozle-js/node + @nozle-js/react
+- **Database:** SQLite (demo mode) / PostgreSQL (production)
+- **Package Manager:** pnpm
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
+## 📝 License
+
+MIT License - see [LICENSE](LICENSE) for details
+
+---
+
+## 💬 Support
+
+- **Documentation:** [docs.nozle.ai](https://docs.nozle.ai)
+- **Discord:** [Join our community](https://discord.gg/nozle)
+- **Issues:** [GitHub Issues](https://github.com/nozle-dev/nozle-templates/issues)
+
+---
+
+Built with ❤️ by the [Nozle](https://nozle.ai) team

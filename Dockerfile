@@ -40,6 +40,15 @@ COPY . .
 
 # Build the specific template using Next.js directly
 WORKDIR /app/${TEMPLATE_NAME}
+# Set NEXT_PUBLIC_* during build so they're baked into the client bundle
+ARG BASE_PATH
+ENV NEXT_PUBLIC_BASE_PATH=${BASE_PATH}
+ARG DEMO_MODE=true
+ENV NEXT_PUBLIC_DEMO_MODE=${DEMO_MODE}
+ARG DEMO_USER_EMAIL=demo@nozle.app
+ENV NEXT_PUBLIC_DEMO_USER_EMAIL=${DEMO_USER_EMAIL}
+ARG DEMO_USER_PASSWORD=Nozlepass@123
+ENV NEXT_PUBLIC_DEMO_USER_PASSWORD=${DEMO_USER_PASSWORD}
 RUN npx next build
 
 FROM base AS runner
