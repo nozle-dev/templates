@@ -15,7 +15,6 @@ services:
       - "3002:3002"
     environment:
       - DEMO_MODE=true
-      - NEXT_PUBLIC_DEMO_MODE=true
       - DEMO_USER_EMAIL=demo@nozle.app
       - DEMO_USER_PASSWORD=Nozlepass@123
       - DEMO_USER_NAME=Demo User
@@ -25,7 +24,7 @@ services:
       - NODE_ENV=production
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/flat-subscription"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:3002/flat-subscription"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -47,7 +46,6 @@ services:
       - "3001:3001"
     environment:
       - DEMO_MODE=true
-      - NEXT_PUBLIC_DEMO_MODE=true
       - DEMO_USER_EMAIL=demo@nozle.app
       - DEMO_USER_PASSWORD=Nozlepass@123
       - DEMO_USER_NAME=Demo User
@@ -57,7 +55,7 @@ services:
       - NODE_ENV=production
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001/saas-usage"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:3001/saas-usage"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -79,7 +77,6 @@ services:
       - "3003:3003"
     environment:
       - DEMO_MODE=true
-      - NEXT_PUBLIC_DEMO_MODE=true
       - DEMO_USER_EMAIL=demo@nozle.app
       - DEMO_USER_PASSWORD=Nozlepass@123
       - DEMO_USER_NAME=Demo User
@@ -89,7 +86,7 @@ services:
       - NODE_ENV=production
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3003/compute"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:3003/compute"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -111,7 +108,6 @@ services:
       - "3004:3004"
     environment:
       - DEMO_MODE=true
-      - NEXT_PUBLIC_DEMO_MODE=true
       - DEMO_USER_EMAIL=demo@nozle.app
       - DEMO_USER_PASSWORD=Nozlepass@123
       - DEMO_USER_NAME=Demo User
@@ -121,7 +117,7 @@ services:
       - NODE_ENV=production
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3004/credit-based"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:3004/credit-based"]
       interval: 30s
       timeout: 10s
       retries: 3

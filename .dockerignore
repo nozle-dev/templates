@@ -58,6 +58,10 @@ CHANGELOG.md
 .gitlab-ci.yml
 .travis.yml
 
+# CLI source (not needed in template Docker builds)
+src
+tsup.config.ts
+
 # Misc
 *.pem
 npm-debug.log*

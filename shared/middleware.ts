@@ -13,14 +13,17 @@ export async function middleware(request: NextRequest) {
 
   // Redirect to login if accessing protected route without session
   if (isProtectedPath && !session.isLoggedIn) {
-    const loginUrl = new URL('/login', request.url)
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = '/login'
     loginUrl.searchParams.set('from', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
   // Redirect to dashboard if already logged in and trying to access login or homepage
   if (session.isLoggedIn && (pathname === '/login' || pathname === '/')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    const dashboardUrl = request.nextUrl.clone()
+    dashboardUrl.pathname = '/dashboard'
+    return NextResponse.redirect(dashboardUrl)
   }
 
   return response
